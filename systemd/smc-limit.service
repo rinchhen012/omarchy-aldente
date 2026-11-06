@@ -1,0 +1,10 @@
+[Unit]
+Description=Apply Apple Silicon firmware charge limit
+ConditionPathExists=/sys/class/power_supply/macsmc-battery
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/lib/smc-limit/apply.sh
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,12 @@
+[Unit]
+Description=Hold Apple Silicon charge at the displayed limit
+ConditionPathExists=/sys/class/power_supply/macsmc-battery
+
+[Service]
+Type=simple
+ExecStart=/usr/local/lib/smc-limit/hold.sh
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

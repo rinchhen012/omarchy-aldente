@@ -1,0 +1,8 @@
+[Unit]
+Description=Watch the saved Apple Silicon charge limit
+
+[Path]
+PathChanged=/etc/udev/macsmc-battery.conf
+
+[Install]
+WantedBy=paths.target
