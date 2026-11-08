@@ -20,7 +20,8 @@ cleanup() {
     changed=0
   fi
 }
-trap cleanup EXIT INT TERM
+trap cleanup EXIT
+trap 'cleanup; exit 0' INT TERM
 
 read_limit() {
   local limit=100 line
