@@ -31,7 +31,10 @@ This project therefore layers:
    or below 80%.
 4. **Top-up controller** — when the display falls below 80%, temporarily
    raises the limit to 90/85, lets the SMC charge, stops at 80%, then restores
-   80/75. It aborts if AC is removed or the saved limit changes.
+   80/75. It aborts if AC is removed or the saved limit changes. A
+   `systemd-sleep` hook stops the controller and restores 80/75 before
+   suspend, so a temporary limit cannot keep charging through a closed lid.
+   The top-up also restores the limit from a signal trap.
 5. **Panel clone** — `~/.config/omarchy/plugins/<user>.power`, fixing the
    panel's "AC connected means charging" logic so force-discharge is shown as
    discharging and the limit is shown as holding.

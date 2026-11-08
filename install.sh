@@ -35,6 +35,10 @@ sudo install -m 0644 \
   "$REPO_DIR/systemd/smc-limit-hold.service" \
   /etc/systemd/system/
 
+echo "==> Installing the sleep hook"
+sudo install -d -m 0755 /etc/systemd/system-sleep
+sudo install -m 0755 "$REPO_DIR/sleep-hook/smc-limit" /etc/systemd/system-sleep/smc-limit
+
 echo "==> Masking the stock asahi save path"
 sudo systemctl stop macsmc-battery-charge-control-end-threshold.path 2>/dev/null || true
 sudo systemctl mask macsmc-battery-charge-control-end-threshold.path >/dev/null

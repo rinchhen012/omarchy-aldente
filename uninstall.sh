@@ -21,7 +21,8 @@ echo "==> Disabling and removing services"
 sudo systemctl disable --now smc-limit-hold.service smc-limit.service smc-limit.path 2>/dev/null || true
 sudo rm -f /etc/systemd/system/smc-limit.service \
            /etc/systemd/system/smc-limit.path \
-           /etc/systemd/system/smc-limit-hold.service
+           /etc/systemd/system/smc-limit-hold.service \
+           /etc/systemd/system-sleep/smc-limit
 sudo rm -rf /usr/local/src/smc-limit /usr/local/lib/smc-limit
 sudo systemctl daemon-reload
 

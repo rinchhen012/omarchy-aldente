@@ -1,0 +1,15 @@
+#!/bin/bash
+# systemd-sleep hook: never leave a temporary top-up limit across suspend.
+set -uo pipefail
+
+case "${1:-}" in
+  pre)
+    systemctl stop smc-limit-hold.service 2>/dev/null || true
+    /usr/local/lib/smc-limit/apply.sh >/dev/null 2>&1 || true
+    ;;
+  post)
+    systemctl start smc-limit-hold.service 2>/dev/null || true
+    ;;
+esac
+
+exit 0

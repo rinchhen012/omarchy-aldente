@@ -12,6 +12,16 @@ mod=$src/smc_limit.ko
 exec 9>/run/smc-limit.lock
 flock -w 60 9 || exit 0
 
+changed=0
+cleanup() {
+  if (( changed == 1 )); then
+    flock -u 9 2>/dev/null || true
+    /usr/local/lib/smc-limit/apply.sh >/dev/null 2>&1 || true
+    changed=0
+  fi
+}
+trap cleanup EXIT INT TERM
+
 read_limit() {
   local limit=100 line
   if [[ -r $saved ]]; then
@@ -40,6 +50,9 @@ awk -v u="$ui" -v l="$limit" 'BEGIN { exit !(u < l) }' || exit 0
 /usr/bin/omarchy power present >/dev/null 2>&1 || exit 0
 
 logger -t smc-limit "top-up start: displayed ${ui}% -> ${limit}%"
+
+# From here on, any exit or signal must restore the normal limit.
+changed=1
 
 rmmod smc_limit 2>/dev/null || true
 if ! insmod "$mod" upper=90 lower=85 2>/dev/null; then
@@ -75,8 +88,7 @@ for _ in $(seq 1 3600); do
   sleep 5
 done
 
-flock -u 9
-/usr/local/lib/smc-limit/apply.sh >/dev/null 2>&1 || true
+cleanup
 
 if (( reached == 1 )); then
   logger -t smc-limit "top-up done"
